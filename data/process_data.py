@@ -48,12 +48,9 @@ def clean_data(df):
     
     #Convert category values to just 0 or 1
     for column in categories:
-        
-        #Set each value to be the last character of the string
-        categories[column] = categories[column].astype(str).str[-1:]
-        
-        #Convert column from string to numeric
-        categories[column] = pd.to_numeric(categories[column])
+       
+        categories[column] = categories[column].astype('str').str.replace('2', '1')
+        categories[column] = categories[column].astype('int')
         
     #Drop the original categories column from `df`
     df.drop(['categories'], axis=1, inplace=True)
@@ -61,9 +58,13 @@ def clean_data(df):
     #Concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df,categories], join='inner', axis=1)
     
+    #Convert categories to binary
+    df['related'] = df['related'].astype('str').str.replace('2', '1')
+    df['related'] = df['related'].astype('int')
+    
     #Drop duplicates
     df = df.drop_duplicates()
-    
+   
     return df
 
 
